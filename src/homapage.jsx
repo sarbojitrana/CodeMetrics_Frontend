@@ -2,11 +2,22 @@ import { useState, useEffect } from "react";
 import { Trophy, Medal, Code, Activity, ChevronUp, ExternalLink, Loader, RefreshCw, Filter, User, Award, ChevronsUp, Github } from "lucide-react";
 import { Outlet } from "react-router-dom";
 const usersList = [
-    { codeforcesUsername: "tourist" },
-    { codeforcesUsername: "Benq" },
-    { codeforcesUsername: "Radewoosh" },
-    { codeforcesUsername: "Petr" },
-    { codeforcesUsername: "Um_nik" },
+    { codeforcesUsername: "sarbojit_007" },
+    { codeforcesUsername: "sarafarajnasardi" },
+    { codeforcesUsername: "Abhay751825" },
+    { codeforcesUsername: "Premraj45" },
+    { codeforcesUsername: "sarfarazahmadselarkhurd" },
+    { codeforcesUsername: "_ShivA_10" },
+    { codeforcesUsername: "dweepsutradhar" },
+    { codeforcesUsername: "Unbreakable_will_dpk" },
+    { codeforcesUsername: "neutralnutan" },
+    { codeforcesUsername: "SOURABHBHAKAR45" },
+    { codeforcesUsername: "kshubham35413" },
+    { codeforcesUsername: "amphonerd" },
+    { codeforcesUsername: "Ansh_raj18" },
+    { codeforcesUsername: "sudhanshurai2005" },
+    { codeforcesUsername: "m_sakib" },
+    { codeforcesUsername: "aditya_0220" },
 ];
 import { useNavigate } from "react-router-dom";
 

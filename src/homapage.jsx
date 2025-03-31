@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Trophy, Medal, Code, Activity, ChevronUp, ExternalLink, Loader, RefreshCw, Filter, User, Award, ChevronsUp, Github } from "lucide-react";
 import { Outlet } from "react-router-dom";
+import UsernameAdder from "./add";
 const usersList = [
     { codeforcesUsername: "sarbojit_007" },
     { codeforcesUsername: "sarafarajnasardi" },
@@ -32,94 +33,92 @@ const HomePage = () => {
     useEffect(() => {
         fetchUserData();
     }, [timeRange]);
-
+    const fetchWithDelay = async (user, userInfoMap, delay) => {
+        await new Promise(res => setTimeout(res, delay));
+        return fetchUserDataForUser(user, userInfoMap[user.codeforcesUsername] || {});
+    };
+    
+    const fetchUserInfoBatch = async () => {
+        const handles = usersList.map(user => user.codeforcesUsername).join(";");
+        try {
+            const response = await fetch(`https://codeforces.com/api/user.info?handles=${handles}`);
+            if (!response.ok) throw new Error("Failed to fetch user info");
+            const data = await response.json();
+            return data.result.reduce((acc, user) => {
+                acc[user.handle] = user;
+                return acc;
+            }, {});
+        } catch (error) {
+            console.error("Error fetching user info batch:", error);
+            return {};
+        }
+    };
+    
+    const fetchUserDataForUser = async (user, userInfo) => {
+        try {
+            const cfSubmissionsResponse = await fetch(
+                `https://codeforces.com/api/user.status?handle=${user.codeforcesUsername}&from=1&count=100`
+            );
+    
+            if (!cfSubmissionsResponse.ok) throw new Error(`Submissions API failed: ${cfSubmissionsResponse.status}`);
+    
+            const cfSubmissionsData = await cfSubmissionsResponse.json();
+    
+            const rangeCutoff = Date.now() - (timeRange * 24 * 60 * 60 * 1000);
+            const recentSubmissions = cfSubmissionsData.result?.filter(
+                (sub) => sub.creationTimeSeconds * 1000 >= rangeCutoff
+            ) || [];
+    
+            const acceptedSubmissions = recentSubmissions.filter(sub => sub.verdict === "OK");
+            const uniqueProblemsSolved = new Set(
+                acceptedSubmissions.map(sub => `${sub.problem.contestId}-${sub.problem.index}`)
+            );
+    
+            const submissionDays = new Set();
+            recentSubmissions.forEach(sub => {
+                const date = new Date(sub.creationTimeSeconds * 1000);
+                submissionDays.add(`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`);
+            });
+    
+            return {
+                username: user.codeforcesUsername,
+                weeklyAcceptedSubmissions: acceptedSubmissions.length,
+                uniqueProblemsSolved: uniqueProblemsSolved.size,
+                submissionStreak: submissionDays.size,
+                totalSubmissions: recentSubmissions.length,
+                rating: userInfo.rating || "N/A",
+                rank: userInfo.rank || "unrated",
+                profileUrl: `https://codeforces.com/profile/${user.codeforcesUsername}`,
+                avatar: userInfo.avatar
+            };
+        } catch (error) {
+            console.error("Error fetching data for", user.codeforcesUsername, error);
+            return {
+                username: user.codeforcesUsername,
+                weeklyAcceptedSubmissions: 0,
+                uniqueProblemsSolved: 0,
+                submissionStreak: 0,
+                totalSubmissions: 0,
+                rating: "N/A",
+                rank: "error",
+                profileUrl: `https://codeforces.com/profile/${user.codeforcesUsername}`,
+                error: true
+            };
+        }
+    };
+    
     const fetchUserData = async () => {
         setLoading(true);
         try {
-            const updatedUsers = await Promise.all(
-                usersList.map(async (user) => {
-                    try {
-                        const cfSubmissionsResponse = await fetch(
-                            `https://codeforces.com/api/user.status?handle=${user.codeforcesUsername}&from=1&count=100`
-                        );
-
-                        if (!cfSubmissionsResponse.ok) {
-                            throw new Error(`API responded with status: ${cfSubmissionsResponse.status}`);
-                        }
-
-                        const cfSubmissionsData = await cfSubmissionsResponse.json();
-
-                        // Get user info for rating and profile pic
-                        const cfUserResponse = await fetch(
-                            `https://codeforces.com/api/user.info?handles=${user.codeforcesUsername}`
-                        );
-
-                        let userInfo = {};
-                        if (cfUserResponse.ok) {
-                            const userData = await cfUserResponse.json();
-                            if (userData.status === "OK") {
-                                userInfo = userData.result[0];
-                            }
-                        }
-
-                        // Filter Codeforces submissions based on time range
-                        const rangeCutoff = Date.now() - (timeRange * 24 * 60 * 60 * 1000);
-                        const recentSubmissions = cfSubmissionsData.result?.filter(
-                            (sub) => sub.creationTimeSeconds * 1000 >= rangeCutoff
-                        ) || [];
-
-                        const acceptedSubmissions = recentSubmissions.filter(sub => sub.verdict === "OK");
-
-                        // Get count of unique problems solved
-                        const uniqueProblemsSolved = new Set(
-                            acceptedSubmissions.map(sub => `${sub.problem.contestId}-${sub.problem.index}`)
-                        );
-
-                        // Calculate streak (consecutive days with submissions)
-                        const submissionDays = new Set();
-                        recentSubmissions.forEach(sub => {
-                            const date = new Date(sub.creationTimeSeconds * 1000);
-                            submissionDays.add(`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`);
-                        });
-
-                        return {
-                            username: user.codeforcesUsername,
-                            weeklyAcceptedSubmissions: acceptedSubmissions.length,
-                            uniqueProblemsSolved: uniqueProblemsSolved.size,
-                            submissionStreak: submissionDays.size,
-                            totalSubmissions: recentSubmissions.length,
-                            rating: userInfo.rating || "N/A",
-                            rank: userInfo.rank || "unrated",
-                            profileUrl: `https://codeforces.com/profile/${user.codeforcesUsername}`,
-                            avatar: userInfo.avatar
-                        };
-                    } catch (error) {
-                        console.error("Error fetching data for", user.codeforcesUsername, error);
-                        return {
-                            username: user.codeforcesUsername,
-                            weeklyAcceptedSubmissions: 0,
-                            uniqueProblemsSolved: 0,
-                            submissionStreak: 0,
-                            totalSubmissions: 0,
-                            rating: "N/A",
-                            rank: "error",
-                            profileUrl: `https://codeforces.com/profile/${user.codeforcesUsername}`,
-                            error: true
-                        };
-                    }
-                })
-            );
-
-            // Sort users based on selected metric
-            const sortedUsers = [...updatedUsers].sort((a, b) => {
-                if (sortBy === 'submissions') return b.weeklyAcceptedSubmissions - a.weeklyAcceptedSubmissions;
-                if (sortBy === 'problems') return b.uniqueProblemsSolved - a.uniqueProblemsSolved;
-                if (sortBy === 'streak') return b.submissionStreak - a.submissionStreak;
-                if (sortBy === 'rating') return (b.rating === "N/A" ? -9999 : b.rating) - (a.rating === "N/A" ? -9999 : a.rating);
-                return b.weeklyAcceptedSubmissions - a.weeklyAcceptedSubmissions;
-            });
-
-            setUsers(sortedUsers);
+            const userInfoMap = await fetchUserInfoBatch();
+            const updatedUsers = [];
+    
+            for (let i = 0; i < usersList.length; i++) {
+                const userData = await fetchWithDelay(usersList[i], userInfoMap, 1); // 500ms delay
+                updatedUsers.push(userData);
+            }
+    
+            setUsers(updatedUsers);
             setLoading(false);
         } catch (err) {
             setError("Failed to fetch user data. Please try again later.");
@@ -127,6 +126,7 @@ const HomePage = () => {
             console.error("Error in fetchUserData:", err);
         }
     };
+    
 
     const getMedalColor = (index) => {
         switch (index) {
@@ -322,7 +322,7 @@ const HomePage = () => {
                                                     <div className="flex items-center gap-2">
                                                         <Award size={16} className="text-yellow-400" />
                                                         <span className={`tabular-nums ${getCFRankColor(user.rank)}`}>
-                                                            {user.rating !== "N/A" ? user.rating : "-"}
+                                                            {user.rating !== "N/A" ? user.rating : "0"}
                                                         </span>
                                                     </div>
                                                 </td>
@@ -353,7 +353,11 @@ const HomePage = () => {
                         </footer>
                     </div>
                 )}
+                <div className="flex items-center justify-center">
+                <UsernameAdder></UsernameAdder>
+                </div>
             </div>
+            
         </div>
     );
 };

@@ -1,23 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { User, Plus, Loader, CheckCircle, AlertCircle } from 'lucide-react';
+import { add } from './utils/user';
+import { userid } from './utils/auth';
 
-const UsernameAdder = ({ onAddUser = () => {} }) => {
+const UsernameAdder = ({ onAddUser = () => {}, userId }) => {
   const [username, setUsername] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-
-  // Clear success message after 3 seconds
-  useEffect(() => {
-    let timer;
-    if (success) {
-      timer = setTimeout(() => {
-        setSuccess('');
-      }, 3000);
-    }
-    return () => clearTimeout(timer);
-  }, [success]);
-
+  
+  
   const validateUsername = async (username) => {
     try {
       const response = await fetch(`https://codeforces.com/api/user.info?handles=${username}`);
@@ -29,17 +21,17 @@ const UsernameAdder = ({ onAddUser = () => {} }) => {
       return false;
     }
   };
-
+  
   const addUsername = async () => {
     if (!username.trim()) {
       setError('Please enter a username');
       return;
     }
-
+    
     setLoading(true);
     setError('');
     setSuccess('');
-
+    
     try {
       // Validate the username with Codeforces API
       const isValid = await validateUsername(username.trim());
@@ -50,21 +42,26 @@ const UsernameAdder = ({ onAddUser = () => {} }) => {
         return;
       }
       
-      // Call parent component handler with the new username
-      onAddUser({ codeforcesUsername: username.trim() });
-      
-      // Show success message
-      setSuccess(`Username "${username.trim()}" added successfully!`);
-      
-      // Reset input field
-      setUsername('');
+      const response = await add(userId, username);
+      if (!response.success) {
+        setError(response.message);
+      } else {
+        // Notify parent component about successful addition
+        onAddUser({ 
+          user:username.trim(),
+        });
+        
+        setSuccess(`Username "${username.trim()}" added successfully!`);
+        // Reset input field
+        setUsername('');
+      }
     } catch (err) {
       setError('Failed to verify username');
     } finally {
       setLoading(false);
     }
   };
-
+  
   return (
     <div className="bg-gray-800 rounded-lg shadow-lg p-4 mt-6 w-full max-w-md">
       <h2 className="text-lg font-bold mb-4 text-blue-400 flex items-center gap-2">

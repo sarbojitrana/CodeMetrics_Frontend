@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, Code, ChevronRight, ArrowRight } from 'lucide-react';
-
+import { Outlet } from 'react-router-dom';
+import { login,register } from './utils/auth';
+import { useNavigate } from 'react-router-dom';
 export default function AuthPages() {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const navigate=useNavigate();
 
   const toggleAuthMode = () => {
     setIsLogin(!isLogin);
@@ -16,18 +19,28 @@ export default function AuthPages() {
     setShowPassword(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle authentication logic here
-    console.log(isLogin ? 'Login with:' : 'Register with:', {
-      email,
-      password,
-      ...(isLogin ? {} : { name })
-    });
+    if (isLogin) {
+        const response = await login(email, password);
+        alert(response.message);
+        if(response.success){
+            navigate(`/Homepage/${email}`);
+        }
+    } else {
+        const response = await register(email, password);
+        if(response.success){
+            alert(response.message);
+            toggleAuthMode;
+        }else{
+          alert(response.message);
+        }
+    }
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-gray-200 p-4">
+        <Outlet/>
       {/* Logo and Header */}
       <div className="flex items-center mb-6">
         <Code className="h-8 w-8 text-indigo-500 mr-2" />

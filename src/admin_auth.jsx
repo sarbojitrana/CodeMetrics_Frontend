@@ -3,7 +3,7 @@ import { Eye, EyeOff, Mail, Lock, Code, ChevronRight, ArrowRight } from 'lucide-
 import { Outlet } from 'react-router-dom';
 import { login,register } from './utils/auth';
 import { useNavigate } from 'react-router-dom';
-export default function AuthPages() {
+const Login1=()=>{
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
@@ -186,3 +186,5 @@ export default function AuthPages() {
     </div>
   );
 }
+
+export default Login1;

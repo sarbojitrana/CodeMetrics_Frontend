@@ -1,9 +1,9 @@
 import axios from "axios";
-
+const link = import.meta.env.VITE_BACKEND_LINK;
 const login = async (email, password) => {
     try {
         const body = { email, password };
-        const response = await axios.post("http://localhost:5000/api/auth/login", body);
+        const response = await axios.post(`${link}/api/auth/login`, body);
 
         if (response.data.success) {
             return { success: true, message: response.data.message };
@@ -18,7 +18,7 @@ const login = async (email, password) => {
 const register = async (email, password) => {
     try {
         const body = { email, password };
-        const response = await axios.post("http://localhost:5000/api/auth/register", body);
+        const response = await axios.post(`${link}/api/auth/register`, body);
 
         if (response.data.success) {
             return { success: true, message: response.data.message };
@@ -32,7 +32,7 @@ const register = async (email, password) => {
 
 const userid = async (email) => {
     try {
-        const response = await axios.get(`http://localhost:5000/api/auth/userid?email=${email}`);
+        const response = await axios.get(`${link}/api/auth/userid?email=${email}`);
 
         if (response.data.success) {
             return { success: true, userid: response.data.userid };

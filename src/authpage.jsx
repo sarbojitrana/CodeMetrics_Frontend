@@ -4,6 +4,26 @@ import { Outlet } from 'react-router-dom';
 import { login, register } from './utils/auth';
 import { useNavigate } from 'react-router-dom';
 
+// CodeMetrics Logo Component
+const CodeMetricsLogo = () => (
+  <div className="flex items-center">
+    <div className="relative h-16 w-20">
+      {/* Center logo image */}
+      <div className="absolute left-4 right-4 top-1/2 -translate-y-1/2 flex justify-center">
+        <img
+          src="/logo2.png" // Make sure this exists in the public folder
+          alt="Codemetrics Logo"
+          className="h-12 object-contain" // Increased from h-8 to h-12
+        />
+      </div>
+    </div>
+
+    <span className="font-extrabold text-3xl text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-400">
+      CodeMetrics
+    </span>
+  </div>
+);
+
 export default function AuthPages() {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -74,7 +94,7 @@ export default function AuthPages() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-gray-200 p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-blue-900 text-gray-200 p-4">
       <Outlet />
       
       {/* Notification */}
@@ -99,21 +119,20 @@ export default function AuthPages() {
         </div>
       )}
       
-      {/* Logo and Header */}
-      <div className="flex items-center mb-6">
-        <Code className="h-8 w-8 text-indigo-500 mr-2" />
-        <h1 className="text-2xl font-bold text-white">CP Leaderboard</h1>
+      {/* Logo and Header - Replaced with CodeMetricsLogo */}
+      <div className="mb-6">
+        <CodeMetricsLogo />
       </div>
       
       {/* Auth Container */}
-      <div className="w-full max-w-md bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+      <div className="w-full max-w-md bg-black/30 backdrop-blur-lg rounded-lg shadow-lg overflow-hidden border border-gray-700/50">
         {/* Tabs */}
         <div className="flex border-b border-gray-700">
           <button
             onClick={() => !loading && setIsLogin(true)}
             disabled={loading}
             className={`flex-1 py-4 font-medium text-sm transition-colors duration-300 ${
-              isLogin ? 'text-indigo-500 border-b-2 border-indigo-500' : 'text-gray-400'
+              isLogin ? 'text-blue-400 border-b-2 border-blue-400' : 'text-gray-400'
             } ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:text-gray-200'}`}
           >
             Login
@@ -122,7 +141,7 @@ export default function AuthPages() {
             onClick={() => !loading && setIsLogin(false)}
             disabled={loading}
             className={`flex-1 py-4 font-medium text-sm transition-colors duration-300 ${
-              !isLogin ? 'text-indigo-500 border-b-2 border-indigo-500' : 'text-gray-400'
+              !isLogin ? 'text-blue-400 border-b-2 border-blue-400' : 'text-gray-400'
             } ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:text-gray-200'}`}
           >
             Register
@@ -131,7 +150,7 @@ export default function AuthPages() {
         
         {/* Form */}
         <div className="p-6">
-          <h2 className="text-xl font-bold mb-6 text-white">
+          <h2 className="text-xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-300">
             {isLogin ? 'Welcome back!' : 'Create an account'}
           </h2>
           
@@ -162,7 +181,7 @@ export default function AuthPages() {
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full bg-gray-700 border border-gray-600 rounded-lg py-2 px-4 pl-10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150"
+                    className="w-full bg-gray-700/60 border border-gray-600/80 rounded-lg py-2 px-4 pl-10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150"
                     placeholder="Enter your name"
                     required
                     disabled={loading}
@@ -183,7 +202,7 @@ export default function AuthPages() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-gray-700 border border-gray-600 rounded-lg py-2 px-4 pl-10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150"
+                  className="w-full bg-gray-700/60 border border-gray-600/80 rounded-lg py-2 px-4 pl-10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150"
                   placeholder="your@email.com"
                   required
                   disabled={loading}
@@ -203,7 +222,7 @@ export default function AuthPages() {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-gray-700 border border-gray-600 rounded-lg py-2 px-4 pl-10 pr-10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-150"
+                  className="w-full bg-gray-700/60 border border-gray-600/80 rounded-lg py-2 px-4 pl-10 pr-10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-150"
                   placeholder={isLogin ? "Enter your password" : "Create a strong password"}
                   required
                   disabled={loading}
@@ -227,8 +246,8 @@ export default function AuthPages() {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg transition duration-300 flex items-center justify-center
-              ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-indigo-700 shadow-lg shadow-indigo-900/50'}`}
+              className={`w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium py-2 px-4 rounded-lg transition duration-300 flex items-center justify-center
+              ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-blue-700 shadow-lg hover:shadow-blue-500/20'}`}
             >
               {loading ? (
                 <div className="flex items-center space-x-2 relative">
@@ -251,7 +270,7 @@ export default function AuthPages() {
           {/* Forgot Password (Login only) */}
           {isLogin && (
             <div className="mt-4 text-center">
-              <a href="#" className={`text-sm text-indigo-400 hover:text-indigo-300 transition duration-150 ${loading ? 'pointer-events-none opacity-50' : ''}`}>
+              <a href="#" className={`text-sm text-blue-400 hover:text-blue-300 transition duration-150 ${loading ? 'pointer-events-none opacity-50' : ''}`}>
                 Forgot your password?
               </a>
             </div>
@@ -264,7 +283,7 @@ export default function AuthPages() {
               <button
                 onClick={() => !loading && toggleAuthMode()}
                 disabled={loading}
-                className={`ml-1 text-indigo-400 font-medium transition duration-150 ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:text-indigo-300'}`}
+                className={`ml-1 text-blue-400 font-medium transition duration-150 ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:text-blue-300'}`}
               >
                 {isLogin ? 'Sign up' : 'Sign in'}
               </button>
@@ -274,8 +293,8 @@ export default function AuthPages() {
       </div>
       
       {/* Footer */}
-      <div className="mt-8 text-sm text-gray-500">
-        <p>© 2025 CP Leaderboard. All rights reserved.</p>
+      <div className="mt-8 text-sm text-gray-400">
+        <p>© 2025 CodeMetrics. All rights reserved.</p>
       </div>
     </div>
   );

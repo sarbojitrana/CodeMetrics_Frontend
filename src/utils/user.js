@@ -32,7 +32,7 @@ const fetchusernames=async (userid)=>{
         if (response.data.success) {
             return { success: true, message: response.data.data };
         }
-        return { success: false, message: response.data.data };
+        return { success: false, message: "No competitors found" };
     }catch(err){
         return { success: false, message: err.response?.data?.data || "Server error" };
     }

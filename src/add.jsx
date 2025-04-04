@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Plus, Trash2, Loader, CheckCircle, AlertCircle, RefreshCw, ArrowLeft, Award, ExternalLink } from 'lucide-react';
+import { User, Plus, Trash2, Loader, CheckCircle, AlertCircle, RefreshCw, ArrowLeft, Award, ExternalLink, MessageSquare, Share2 } from 'lucide-react';
 import { add, remove, fetchusernames } from './utils/user';
 import { userid } from './utils/auth';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -32,8 +32,15 @@ const UsernameManagementPage = () => {
   const [deleteLoading, setDeleteLoading] = useState({});
   const [refreshing, setRefreshing] = useState(false);
   const [userId, setUserId] = useState("");
+  const [showSharePopup, setShowSharePopup] = useState(false);
+  const [shareSuccess, setShareSuccess] = useState(false);
 
-  // Fetch user ID from email parameter
+  const feedbackFormUrl = "https://forms.gle/XqQ8CFTPYECdVLZ17";
+  
+  const shareUrl = "https://codemetrics-rosy.vercel.app/";
+  
+  const shareMessage = "Check out CodeMetrics - the ultimate tool for tracking competitive programming progress! Join me in improving our coding skills.";
+
   useEffect(() => {
     let isMounted = true;
 
@@ -85,8 +92,6 @@ const UsernameManagementPage = () => {
       
       if (data.success) {
         setUsernames(data.message || []);
-      } else {
-        setError(data.message || 'Failed to fetch usernames');
       }
     } catch (err) {
       console.error("Error loading usernames:", err);
@@ -142,8 +147,44 @@ const UsernameManagementPage = () => {
   const handleGoBack = () => {
     navigate(-1);
   };
+  
   const handleNavigateToManagement = () => {
     navigate(`/Homepage/${userId}`);
+  };
+
+  // Share functionality
+  const handleShare = async () => {
+    setShowSharePopup(true);
+    
+    // Use Web Share API if available
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'CodeMetrics',
+          text: shareMessage,
+          url: shareUrl,
+        });
+        setShareSuccess(true);
+        setTimeout(() => setShareSuccess(false), 3000);
+      } catch (error) {
+        console.log('Error sharing:', error);
+      }
+    } else {
+      // Fallback for browsers that don't support Web Share API
+      try {
+        await navigator.clipboard.writeText(`${shareMessage} ${shareUrl}`);
+        setShareSuccess(true);
+        setTimeout(() => setShareSuccess(false), 3000);
+      } catch (err) {
+        console.error('Failed to copy: ', err);
+      }
+    }
+  };
+
+  // Close share popup
+  const closeSharePopup = () => {
+    setShowSharePopup(false);
+    setShareSuccess(false);
   };
 
   return (
@@ -162,14 +203,24 @@ const UsernameManagementPage = () => {
               <CodeMetricsLogo />
             </div>
             
-            <button 
-              onClick={refreshUsernames}
-              disabled={refreshing || loading || !userId}
-              className="flex items-center gap-2 bg-blue-600/80 hover:bg-blue-500 px-4 py-2.5 rounded-lg transition-all disabled:opacity-50 shadow-lg hover:shadow-blue-500/20"
-            >
-              <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
-              Refresh
-            </button>
+            <div className="flex items-center gap-2">
+              <button 
+                onClick={handleShare}
+                className="flex items-center gap-2 bg-green-600/80 hover:bg-green-500 px-4 py-2.5 rounded-lg transition-all shadow-lg hover:shadow-green-500/20"
+              >
+                <Share2 className="w-4 h-4" />
+                Share
+              </button>
+              
+              <button 
+                onClick={refreshUsernames}
+                disabled={refreshing || loading || !userId}
+                className="flex items-center gap-2 bg-blue-600/80 hover:bg-blue-500 px-4 py-2.5 rounded-lg transition-all disabled:opacity-50 shadow-lg hover:shadow-blue-500/20"
+              >
+                <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+                Refresh
+              </button>
+            </div>
           </div>
           
           <div className="mt-4">
@@ -268,8 +319,8 @@ const UsernameManagementPage = () => {
           </div>
         </div>
 
-        {/* Footer action button */}
-        <div className="mt-8 flex items-center justify-center">
+        {/* Footer action buttons */}
+        <div className="mt-8 flex items-center justify-center gap-4 flex-wrap">
           <button
             onClick={handleNavigateToManagement}
             className="relative group bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3.5 rounded-xl shadow-lg hover:shadow-blue-500/30 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden"
@@ -280,6 +331,19 @@ const UsernameManagementPage = () => {
               <span className="font-medium">View Your Leaderboard</span>
             </span>
           </button>
+          
+          <a 
+            href={feedbackFormUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative group bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3.5 rounded-xl shadow-lg hover:shadow-purple-500/30 transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 overflow-hidden"
+          >
+            <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+            <span className="relative flex items-center gap-2">
+              <MessageSquare className="w-5 h-5" />
+              <span className="font-medium">Give Feedback</span>
+            </span>
+          </a>
         </div>
 
         {/* Footer with logo */}
@@ -292,6 +356,52 @@ const UsernameManagementPage = () => {
           </div>
         </div>
       </div>
+      
+      {/* Share Popup */}
+      {showSharePopup && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-900 rounded-xl shadow-2xl border border-gray-700 p-6 max-w-md w-full relative animate-fade-in">
+            <h3 className="text-xl font-bold mb-4 text-blue-300 flex items-center gap-2">
+              <Share2 className="w-5 h-5" />
+              Share CodeMetrics
+            </h3>
+            
+            <p className="text-gray-300 mb-4">
+              {shareMessage}
+            </p>
+            
+            <div className="bg-gray-800 p-4 rounded-lg mb-6 border border-gray-700 flex items-center">
+              <p className="text-gray-400 text-sm truncate flex-1">{shareUrl}</p>
+              <button 
+                onClick={async () => {
+                  await navigator.clipboard.writeText(`${shareMessage} ${shareUrl}`);
+                  setShareSuccess(true);
+                  setTimeout(() => setShareSuccess(false), 3000);
+                }}
+                className="ml-3 bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-md text-sm flex-shrink-0"
+              >
+                Copy
+              </button>
+            </div>
+            
+            {shareSuccess && (
+              <div className="mb-4 p-3 bg-green-500/10 backdrop-blur-sm border border-green-500/30 rounded-lg text-green-300 flex items-center gap-2 text-sm">
+                <CheckCircle className="w-4 h-4 flex-shrink-0" />
+                <span>Link copied to clipboard!</span>
+              </div>
+            )}
+            
+            <div className="flex justify-end gap-3 mt-2">
+              <button
+                onClick={closeSharePopup}
+                className="px-4 py-2 text-gray-400 hover:text-white bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -3,7 +3,26 @@ import { User, Plus, Trash2, Loader, CheckCircle, AlertCircle, RefreshCw, ArrowL
 import { add, remove, fetchusernames } from './utils/user';
 import { userid } from './utils/auth';
 import { useParams, useNavigate } from 'react-router-dom';
-
+// CodeMetrics Logo Component
+const CodeMetricsLogo = () => (
+    <div className="flex items-center">
+      <div className="relative h-16 w-20">
+        {/* Center logo image */}
+        <div className="absolute left-4 right-4 top-1/2 -translate-y-1/2 flex justify-center">
+          <img
+            src="/logo2.png" // Make sure this exists in the public folder
+            alt="Codemetrics Logo"
+            className="h-12 object-contain" // Increased from h-8 to h-12
+          />
+        </div>
+      </div>
+  
+      <span className="font-extrabold text-3xl text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-400">
+        CodeMetrics
+      </span>
+    </div>
+  );
+  
 const UsernameManagementPage = () => {
   const { email } = useParams();
   const navigate = useNavigate();
@@ -130,7 +149,7 @@ const UsernameManagementPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-blue-900 text-white p-6">
       <div className="max-w-4xl mx-auto">
-        {/* Header section */}
+        {/* Header section with logo */}
         <div className="bg-black/30 backdrop-blur-lg rounded-2xl p-6 mb-8 shadow-xl border border-gray-700/50">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
@@ -140,9 +159,7 @@ const UsernameManagementPage = () => {
               >
                 <ArrowLeft className="h-5 w-5" />
               </button>
-              <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-300">
-                Competitor Management
-              </h1>
+              <CodeMetricsLogo />
             </div>
             
             <button 
@@ -155,9 +172,14 @@ const UsernameManagementPage = () => {
             </button>
           </div>
           
-          <p className="text-gray-300 text-sm">
-            Manage your competitors and track their progress against yours. Add Codeforces usernames to compare performance.
-          </p>
+          <div className="mt-4">
+            <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-300">
+              Competitor Management
+            </h1>
+            <p className="text-gray-300 text-sm mt-2">
+              Manage your competitors and track their progress against yours. Add Codeforces usernames to compare performance.
+            </p>
+          </div>
         </div>
 
         {/* Main content section */}
@@ -258,6 +280,16 @@ const UsernameManagementPage = () => {
               <span className="font-medium">View Your Leaderboard</span>
             </span>
           </button>
+        </div>
+
+        {/* Footer with logo */}
+        <div className="mt-12 pt-6 border-t border-gray-700/30 flex justify-center">
+          <div className="text-center">
+            <CodeMetricsLogo />
+            <p className="text-gray-500 text-xs mt-2">
+              Track your competitive programming progress
+            </p>
+          </div>
         </div>
       </div>
     </div>

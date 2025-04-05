@@ -32,14 +32,17 @@ const HomePage = () => {
   
   useEffect(() => {
     let isMounted = true;
-
+  
     const fetchUsers = async () => {
       if (!userId) return;
-
+      
+      // Set loading state to true before fetching usernames
+      setLoading(true);
+  
       try {
         const response = await fetchusernames(userId);
         if (!isMounted) return;
-
+  
         if (response.success) {
           setUsersList(
             response.message.map((username) => ({
@@ -53,12 +56,13 @@ const HomePage = () => {
         if (!isMounted) return;
         setError("Failed to fetch usernames. Please try again later.");
       }
+      // Don't set loading to false here - it will be handled by the fetchUserData effect
     };
-
+  
     if (userId) {
       fetchUsers();
     }
-
+  
     return () => {
       isMounted = false;
     };

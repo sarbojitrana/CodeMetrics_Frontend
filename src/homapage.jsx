@@ -622,7 +622,7 @@ const HomePage = () => {
             <footer className="flex flex-wrap justify-between items-center text-sm text-gray-400 gap-2 mt-4 p-4 bg-gray-800/40 backdrop-blur-sm rounded-xl border border-blue-900/30">
               <p>Last updated: {new Date().toLocaleString()}</p>
               <a
-                href="https://github.com"
+                href="https://github.com/sarbojitrana/CodeMetrics_Frontend"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 hover:text-cyan-300 transition-colors bg-gray-700/50 hover:bg-gray-700 px-3 py-1.5 rounded-lg"

@@ -1073,9 +1073,21 @@ const UserDetailsPage = () => {
                                                         label={{ value: 'Max Rating', angle: -90, position: 'insideLeft', fill: '#999' }}
                                                     />
                                                     <Tooltip
-                                                        contentStyle={{ backgroundColor: '#111', borderColor: '#333' }}
-                                                        formatter={(value) => [value, 'Max Rating']}
-                                                        labelFormatter={(label) => `After ${label} problems`}
+                                                        content={({ active, payload }) => {
+                                                            if (active && payload && payload.length) {
+                                                                return (
+                                                                    <div style={{
+                                                                        backgroundColor: '#111',
+                                                                        border: '1px solid #333',
+                                                                        padding: '10px',
+                                                                        color: 'white'
+                                                                    }}>
+                                                                        <p>{`${payload[0].name}: ${payload[0].value} submissions`}</p>
+                                                                    </div>
+                                                                );
+                                                            }
+                                                            return null;
+                                                        }}
                                                     />
                                                     <Line
                                                         type="monotone"
@@ -1087,7 +1099,7 @@ const UserDetailsPage = () => {
                                             </ResponsiveContainer>
                                         );
                                     })()}
-                                </div>
+                                </div>``
                             </div>
                         </div>
                     )}

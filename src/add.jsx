@@ -3,25 +3,26 @@ import { User, Plus, Trash2, Loader, CheckCircle, AlertCircle, RefreshCw, ArrowL
 import { add, remove, fetchusernames } from './utils/user';
 import { userid } from './utils/auth';
 import { useParams, useNavigate } from 'react-router-dom';
+
 // CodeMetrics Logo Component
 const CodeMetricsLogo = () => (
-    <div className="flex items-center">
-      <div className="relative h-16 w-20">
-        {/* Center logo image */}
-        <div className="absolute left-4 right-4 top-1/2 -translate-y-1/2 flex justify-center">
-          <img
-            src="/logo2.png" // Make sure this exists in the public folder
-            alt="Codemetrics Logo"
-            className="h-12 object-contain" // Increased from h-8 to h-12
-          />
-        </div>
+  <div className="flex items-center">
+    <div className="relative h-12 sm:h-16 w-16 sm:w-20">
+      {/* Center logo image */}
+      <div className="absolute left-2 right-2 sm:left-4 sm:right-4 top-1/2 -translate-y-1/2 flex justify-center">
+        <img
+          src="/logo2.png" // Make sure this exists in the public folder
+          alt="Codemetrics Logo"
+          className="h-8 sm:h-12 object-contain" // Small on mobile, original size on desktop
+        />
       </div>
-  
-      <span className="font-extrabold text-3xl text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-400">
-        CodeMetrics
-      </span>
     </div>
-  );
+
+    <span className="font-extrabold text-xl sm:text-3xl text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-400">
+      CodeMetrics
+    </span>
+  </div>
+);
   
 const UsernameManagementPage = () => {
   const { email } = useParams();
@@ -188,127 +189,130 @@ const UsernameManagementPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-blue-900 text-white p-6">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-blue-900 text-white p-3 sm:p-6">
       <div className="max-w-4xl mx-auto">
         {/* Header section with logo */}
-        <div className="bg-black/30 backdrop-blur-lg rounded-2xl p-6 mb-8 shadow-xl border border-gray-700/50">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-4">
+        <div className="bg-black/30 backdrop-blur-lg rounded-2xl p-4 sm:p-6 mb-4 sm:mb-8 shadow-xl border border-gray-700/50">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
               <button 
                 onClick={handleGoBack}
-                className="bg-blue-600/80 hover:bg-blue-500 p-2.5 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-lg hover:shadow-blue-500/20"
+                className="bg-blue-600/80 hover:bg-blue-500 p-2 sm:p-2.5 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-blue-400 shadow-lg hover:shadow-blue-500/20"
               >
-                <ArrowLeft className="h-5 w-5" />
+                <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
               <CodeMetricsLogo />
             </div>
             
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
               <button 
                 onClick={handleShare}
-                className="flex items-center gap-2 bg-green-600/80 hover:bg-green-500 px-4 py-2.5 rounded-lg transition-all shadow-lg hover:shadow-green-500/20"
+                className="flex items-center gap-1 sm:gap-2 bg-green-600/80 hover:bg-green-500 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg transition-all shadow-lg hover:shadow-green-500/20 text-xs sm:text-sm"
               >
-                <Share2 className="w-4 h-4" />
+                <Share2 className="w-3 h-3 sm:w-4 sm:h-4" />
                 Share
               </button>
               
               <button 
                 onClick={refreshUsernames}
                 disabled={refreshing || loading || !userId}
-                className="flex items-center gap-2 bg-blue-600/80 hover:bg-blue-500 px-4 py-2.5 rounded-lg transition-all disabled:opacity-50 shadow-lg hover:shadow-blue-500/20"
+                className="flex items-center gap-1 sm:gap-2 bg-blue-600/80 hover:bg-blue-500 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg transition-all disabled:opacity-50 shadow-lg hover:shadow-blue-500/20 text-xs sm:text-sm"
               >
-                <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+                <RefreshCw className={`w-3 h-3 sm:w-4 sm:h-4 ${refreshing ? 'animate-spin' : ''}`} />
                 Refresh
               </button>
             </div>
           </div>
           
-          <div className="mt-4">
-            <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-300">
+          <div className="mt-2 sm:mt-4">
+            <h1 className="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-300">
               Competitor Management
             </h1>
-            <p className="text-gray-300 text-sm mt-2">
+            <p className="text-gray-300 text-xs sm:text-sm mt-1 sm:mt-2">
               Manage your competitors and track their progress against yours. Add Codeforces usernames to compare performance.
             </p>
           </div>
         </div>
 
-        {/* Main content section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Left column - Username adder */}
-          <div className="md:col-span-1">
+        {/* 
+          Main content section - Stack on mobile, grid on larger screens 
+          We'll use flex-col for mobile and restore your original grid-cols for desktop
+        */}
+        <div className="flex flex-col md:grid md:grid-cols-3 gap-4 sm:gap-6">
+          {/* Left column - Username adder - Full width on mobile, 1/3 on desktop */}
+          <div className="w-full md:col-span-1">
             {userId ? (
               <UsernameAdder onAddUser={handleAddUser} userId={userId} />
             ) : (
-              <div className="bg-black/30 backdrop-blur-lg rounded-xl p-5 text-yellow-400 flex items-center gap-2 shadow-lg border border-gray-700/50">
-                <Loader className="w-5 h-5 animate-spin" />
+              <div className="bg-black/30 backdrop-blur-lg rounded-xl p-4 text-yellow-400 flex items-center gap-2 shadow-lg border border-gray-700/50">
+                <Loader className="w-4 h-4 animate-spin" />
                 Loading user information...
               </div>
             )}
           </div>
 
-          {/* Right column - Usernames list */}
-          <div className="md:col-span-2">
+          {/* Right column - Usernames list - Full width on mobile, 2/3 on desktop */}
+          <div className="w-full md:col-span-2">
             {/* Error message */}
             {error && (
-              <div className="mb-4 p-4 bg-red-500/10 backdrop-blur-sm border border-red-500/30 rounded-xl text-red-300 flex items-center gap-2 shadow-lg">
-                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+              <div className="mb-4 p-3 sm:p-4 bg-red-500/10 backdrop-blur-sm border border-red-500/30 rounded-xl text-red-300 flex items-center gap-2 shadow-lg text-xs sm:text-sm">
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
                 <span>{error}</span>
               </div>
             )}
 
             {/* Usernames list */}
             <div className="bg-black/30 backdrop-blur-lg rounded-xl shadow-xl border border-gray-700/50 overflow-hidden">
-              <div className="p-4 border-b border-gray-700/70 flex items-center justify-between">
-                <h2 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-300 flex items-center gap-2">
-                  <Award size={18} />
+              <div className="p-3 sm:p-4 border-b border-gray-700/70 flex items-center justify-between">
+                <h2 className="text-base sm:text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-300 flex items-center gap-1 sm:gap-2">
+                  <Award size={16} className="sm:w-5 sm:h-5" />
                   Competitors ({loading ? '...' : usernames.length})
                 </h2>
               </div>
 
               {loading ? (
-                <div className="flex justify-center items-center p-12">
+                <div className="flex justify-center items-center p-8 sm:p-12">
                   <div className="text-center">
-                    <Loader className="w-10 h-10 animate-spin text-blue-400 mx-auto mb-3" />
-                    <p className="text-gray-400">Loading competitors...</p>
+                    <Loader className="w-8 h-8 sm:w-10 sm:h-10 animate-spin text-blue-400 mx-auto mb-3" />
+                    <p className="text-gray-400 text-sm">Loading competitors...</p>
                   </div>
                 </div>
               ) : usernames.length === 0 ? (
-                <div className="p-12 text-center">
-                  <User className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-                  <p className="text-gray-400 mb-2">No competitors added yet.</p>
-                  <p className="text-gray-500 text-sm">Add your first competitor using the form on the left.</p>
+                <div className="p-8 sm:p-12 text-center">
+                  <User className="w-10 h-10 sm:w-12 sm:h-12 text-gray-600 mx-auto mb-3" />
+                  <p className="text-gray-400 mb-2 text-sm">No competitors added yet.</p>
+                  <p className="text-gray-500 text-xs sm:text-sm">Add your first competitor using the form on the left.</p>
                 </div>
               ) : (
-                <ul className="divide-y divide-gray-700/70 max-h-96 overflow-y-auto">
+                <ul className="divide-y divide-gray-700/70 max-h-80 sm:max-h-96 overflow-y-auto">
                   {usernames.map((username, index) => (
-                    <li key={username} className={`flex items-center justify-between p-4 hover:bg-blue-600/10 transition-colors ${index % 2 === 0 ? 'bg-gray-800/30' : 'bg-gray-800/10'}`}>
-                      <div className="flex items-center gap-3">
-                        <div className="bg-blue-600/20 p-2 rounded-full">
-                          <User className="w-5 h-5 text-blue-400" />
+                    <li key={username} className={`flex items-center justify-between p-3 sm:p-4 hover:bg-blue-600/10 transition-colors ${index % 2 === 0 ? 'bg-gray-800/30' : 'bg-gray-800/10'}`}>
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <div className="bg-blue-600/20 p-1.5 sm:p-2 rounded-full">
+                          <User className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
                         </div>
                         <div>
                           <a 
                             href={`https://codeforces.com/profile/${username}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-300 hover:text-blue-200 font-medium flex items-center gap-1 hover:underline"
+                            className="text-blue-300 hover:text-blue-200 font-medium flex items-center gap-1 hover:underline text-sm"
                           >
                             {username}
-                            <ExternalLink className="w-3.5 h-3.5 opacity-70" />
+                            <ExternalLink className="w-3 h-3 sm:w-3.5 sm:h-3.5 opacity-70" />
                           </a>
                         </div>
                       </div>
                       <button
                         onClick={() => handleRemoveUser(username)}
                         disabled={deleteLoading[username]}
-                        className="text-red-400 hover:text-red-300 p-2 rounded-full hover:bg-red-900/30 transition-all"
+                        className="text-red-400 hover:text-red-300 p-1.5 sm:p-2 rounded-full hover:bg-red-900/30 transition-all"
                         title="Remove competitor"
                       >
                         {deleteLoading[username] ? (
-                          <Loader className="w-5 h-5 animate-spin" />
+                          <Loader className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
                         ) : (
-                          <Trash2 className="w-5 h-5" />
+                          <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
                         )}
                       </button>
                     </li>
@@ -320,14 +324,14 @@ const UsernameManagementPage = () => {
         </div>
 
         {/* Footer action buttons */}
-        <div className="mt-8 flex items-center justify-center gap-4 flex-wrap">
+        <div className="mt-6 sm:mt-8 flex items-center justify-center gap-3 sm:gap-4 flex-wrap">
           <button
             onClick={handleNavigateToManagement}
-            className="relative group bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3.5 rounded-xl shadow-lg hover:shadow-blue-500/30 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden"
+            className="relative group bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-xl shadow-lg hover:shadow-blue-500/30 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 overflow-hidden text-xs sm:text-sm"
           >
             <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-500 to-indigo-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
             <span className="relative flex items-center gap-2">
-              <Award className="w-5 h-5" />
+              <Award className="w-4 h-4 sm:w-5 sm:h-5" />
               <span className="font-medium">View Your Leaderboard</span>
             </span>
           </button>
@@ -336,21 +340,23 @@ const UsernameManagementPage = () => {
             href={feedbackFormUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="relative group bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3.5 rounded-xl shadow-lg hover:shadow-purple-500/30 transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 overflow-hidden"
+            className="relative group bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-xl shadow-lg hover:shadow-purple-500/30 transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 overflow-hidden text-xs sm:text-sm"
           >
             <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity"></span>
             <span className="relative flex items-center gap-2">
-              <MessageSquare className="w-5 h-5" />
+              <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5" />
               <span className="font-medium">Give Feedback</span>
             </span>
           </a>
         </div>
 
         {/* Footer with logo */}
-        <div className="mt-12 pt-6 border-t border-gray-700/30 flex justify-center">
+        <div className="mt-8 sm:mt-12 pt-4 sm:pt-6 border-t border-gray-700/30 flex justify-center">
           <div className="text-center">
-            <CodeMetricsLogo />
-            <p className="text-gray-500 text-xs mt-2">
+            <div className="scale-75 sm:scale-100">
+              <CodeMetricsLogo />
+            </div>
+            <p className="text-gray-500 text-xs mt-1 sm:mt-2">
               Track your competitive programming progress
             </p>
           </div>
@@ -360,33 +366,33 @@ const UsernameManagementPage = () => {
       {/* Share Popup */}
       {showSharePopup && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-900 rounded-xl shadow-2xl border border-gray-700 p-6 max-w-md w-full relative animate-fade-in">
-            <h3 className="text-xl font-bold mb-4 text-blue-300 flex items-center gap-2">
-              <Share2 className="w-5 h-5" />
+          <div className="bg-gray-900 rounded-xl shadow-2xl border border-gray-700 p-4 sm:p-6 max-w-md w-full relative animate-fade-in">
+            <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-blue-300 flex items-center gap-2">
+              <Share2 className="w-4 h-4 sm:w-5 sm:h-5" />
               Share CodeMetrics
             </h3>
             
-            <p className="text-gray-300 mb-4">
+            <p className="text-gray-300 mb-3 sm:mb-4 text-sm">
               {shareMessage}
             </p>
             
-            <div className="bg-gray-800 p-4 rounded-lg mb-6 border border-gray-700 flex items-center">
-              <p className="text-gray-400 text-sm truncate flex-1">{shareUrl}</p>
+            <div className="bg-gray-800 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6 border border-gray-700 flex items-center">
+              <p className="text-gray-400 text-xs sm:text-sm truncate flex-1">{shareUrl}</p>
               <button 
                 onClick={async () => {
                   await navigator.clipboard.writeText(`${shareMessage} ${shareUrl}`);
                   setShareSuccess(true);
                   setTimeout(() => setShareSuccess(false), 3000);
                 }}
-                className="ml-3 bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-md text-sm flex-shrink-0"
+                className="ml-2 sm:ml-3 bg-blue-600 hover:bg-blue-500 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-xs sm:text-sm flex-shrink-0"
               >
                 Copy
               </button>
             </div>
             
             {shareSuccess && (
-              <div className="mb-4 p-3 bg-green-500/10 backdrop-blur-sm border border-green-500/30 rounded-lg text-green-300 flex items-center gap-2 text-sm">
-                <CheckCircle className="w-4 h-4 flex-shrink-0" />
+              <div className="mb-4 p-2 sm:p-3 bg-green-500/10 backdrop-blur-sm border border-green-500/30 rounded-lg text-green-300 flex items-center gap-2 text-xs sm:text-sm">
+                <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                 <span>Link copied to clipboard!</span>
               </div>
             )}
@@ -394,7 +400,7 @@ const UsernameManagementPage = () => {
             <div className="flex justify-end gap-3 mt-2">
               <button
                 onClick={closeSharePopup}
-                className="px-4 py-2 text-gray-400 hover:text-white bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
+                className="px-3 sm:px-4 py-1.5 sm:py-2 text-gray-400 hover:text-white bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors text-xs sm:text-sm"
               >
                 Close
               </button>
@@ -474,14 +480,14 @@ const UsernameAdder = ({ onAddUser = () => {}, userId }) => {
   };
   
   return (
-    <div className="bg-black/30 backdrop-blur-lg rounded-xl shadow-xl p-5 w-full mx-auto border border-gray-700/50 h-full">
-      <h2 className="text-xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-300 flex items-center gap-2">
-        <Plus size={18} />
+    <div className="bg-black/30 backdrop-blur-lg rounded-xl shadow-xl p-4 sm:p-5 w-full mx-auto border border-gray-700/50 h-full">
+      <h2 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-300 flex items-center gap-1 sm:gap-2">
+        <Plus size={18} className="sm:size-8 text-white" />
         Add Competitor
       </h2>
       
-      <div className="mb-6">
-        <p className="text-gray-300 text-sm mb-4">
+      <div className="mb-4 sm:mb-6">
+        <p className="text-gray-300 text-xs sm:text-sm mb-3 sm:mb-4">
           Enter a valid Codeforces username to add to your tracking list.
         </p>
         
@@ -491,7 +497,7 @@ const UsernameAdder = ({ onAddUser = () => {}, userId }) => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="Enter Codeforces username"
-            className="w-full px-4 py-3 bg-gray-800/70 border border-gray-600/80 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-inner placeholder-gray-500"
+            className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-800/70 border border-gray-600/80 rounded-lg text-white text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-inner placeholder-gray-500"
             onKeyPress={(e) => e.key === 'Enter' && !loading && addUsername()}
             disabled={loading}
           />
@@ -500,34 +506,34 @@ const UsernameAdder = ({ onAddUser = () => {}, userId }) => {
         <button
           onClick={addUsername}
           disabled={loading}
-          className="mt-3 w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-3 rounded-lg hover:shadow-lg hover:shadow-blue-500/20 focus:outline-none transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:bg-blue-600 font-medium"
+          className="mt-2 sm:mt-3 w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-3 sm:px-4 py-2.5 sm:py-3 rounded-lg hover:shadow-lg hover:shadow-blue-500/20 focus:outline-none transition-all flex items-center justify-center gap-1 sm:gap-2 disabled:opacity-70 disabled:hover:bg-blue-600 font-medium text-xs sm:text-sm"
         >
           {loading ? (
-            <Loader className="w-4 h-4 animate-spin" />
+            <Loader className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" />
           ) : (
-            <Plus className="w-4 h-4" />
+            <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
           )}
           <span>{loading ? "Verifying..." : "Add Competitor"}</span>
         </button>
       </div>
       
       {error && (
-        <div className="mt-4 p-3 bg-red-500/10 backdrop-blur-sm border border-red-500/30 rounded-lg text-red-300 flex items-center gap-2 text-sm">
-          <AlertCircle className="w-4 h-4 flex-shrink-0" />
+        <div className="mt-3 sm:mt-4 p-2 sm:p-3 bg-red-500/10 backdrop-blur-sm border border-red-500/30 rounded-lg text-red-300 flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+          <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
           <span>{error}</span>
         </div>
       )}
       
       {success && (
-        <div className="mt-4 p-3 bg-green-500/10 backdrop-blur-sm border border-green-500/30 rounded-lg text-green-300 flex items-center gap-2 text-sm">
-          <CheckCircle className="w-4 h-4 flex-shrink-0" />
+        <div className="mt-3 sm:mt-4 p-2 sm:p-3 bg-green-500/10 backdrop-blur-sm border border-green-500/30 rounded-lg text-green-300 flex items-center gap-1 sm:gap-2 text-xs sm:text-sm">
+          <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
           <span>{success}</span>
         </div>
       )}
       
-      <div className="mt-6 pt-6 border-t border-gray-700/50">
-        <h3 className="text-sm font-medium text-gray-400 mb-2">Tips:</h3>
-        <ul className="text-xs text-gray-500 space-y-1">
+      <div className="mt-4 sm:mt-6 pt-3 sm:pt-6 border-t border-gray-700/50">
+        <h3 className="text-xs font-medium text-gray-400 mb-1 sm:mb-2">Tips:</h3>
+        <ul className="text-xs text-gray-500 space-y-0.5 sm:space-y-1">
           <li>• Usernames are case-sensitive</li>
           <li>• Only valid Codeforces users can be added</li>
           <li>• Track up to 20 competitors at once</li>

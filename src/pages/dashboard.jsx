@@ -195,7 +195,6 @@ const CPDashboard = () => {
                 <div className="absolute -top-8 -left-8 w-24 h-24 bg-pink-600/10 rounded-full blur-xl"></div>
               </div>
             </div>
-            
             <div className="p-4 sm:p-6 border-t border-gray-700/30">
               <h2 className="text-lg sm:text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-300 to-pink-300 mb-2">
                 CP Sheets
@@ -203,7 +202,6 @@ const CPDashboard = () => {
               <p className="text-gray-300 text-xs sm:text-sm mb-4">
                 Access curated problem sets and practice sheets designed to level up your competitive programming skills.
               </p>
-              
               <div className="space-y-2 mb-4">
                 <div className="flex items-center text-xs sm:text-sm text-gray-400 gap-2">
                   <FileText className="w-3 h-3 sm:w-4 sm:h-4 text-purple-400" />

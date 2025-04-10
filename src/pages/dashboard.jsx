@@ -229,75 +229,7 @@ const CPDashboard = () => {
             </div>
           </div>
         </div>
-        
-        {/* Stats Section */}
-        <div className="mt-6 sm:mt-8 bg-black/30 backdrop-blur-lg rounded-xl shadow-xl border border-gray-700/50 p-4 sm:p-6">
-          <h2 className="text-lg sm:text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-300 mb-3 sm:mb-4">
-            Your CP Journey
-          </h2>
-          
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-            <div className="bg-gray-800/50 rounded-lg p-3 sm:p-4 text-center">
-              <p className="text-gray-400 text-xs mb-1">Problems Solved</p>
-              <p className="text-blue-300 text-xl sm:text-2xl font-bold">247</p>
-            </div>
-            
-            <div className="bg-gray-800/50 rounded-lg p-3 sm:p-4 text-center">
-              <p className="text-gray-400 text-xs mb-1">Current Rating</p>
-              <p className="text-green-300 text-xl sm:text-2xl font-bold">1856</p>
-            </div>
-            
-            <div className="bg-gray-800/50 rounded-lg p-3 sm:p-4 text-center">
-              <p className="text-gray-400 text-xs mb-1">Streak</p>
-              <p className="text-yellow-300 text-xl sm:text-2xl font-bold">14 days</p>
-            </div>
-            
-            <div className="bg-gray-800/50 rounded-lg p-3 sm:p-4 text-center">
-              <p className="text-gray-400 text-xs mb-1">Global Rank</p>
-              <p className="text-purple-300 text-xl sm:text-2xl font-bold">#4,392</p>
-            </div>
-          </div>
-        </div>
-        
-        {/* Featured Contest */}
-        <div className="mt-6 sm:mt-8 bg-black/30 backdrop-blur-lg rounded-xl shadow-xl border border-gray-700/50 p-4 sm:p-6">
-          <div className="flex items-center justify-between mb-3 sm:mb-4">
-            <h2 className="text-lg sm:text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-indigo-300">
-              Upcoming Contest
-            </h2>
-            
-            <a 
-              href="https://codeforces.com/contests" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-blue-400 hover:text-blue-300 text-xs flex items-center gap-1"
-            >
-              View All
-              <ExternalLink className="w-3 h-3" />
-            </a>
-          </div>
-          
-          <div className="bg-gradient-to-r from-blue-900/30 to-indigo-900/30 rounded-lg p-3 sm:p-4 border border-blue-700/30">
-            <div className="flex flex-col sm:flex-row justify-between gap-3">
-              <div>
-                <h3 className="font-semibold text-blue-300 text-sm sm:text-base">Codeforces Round #999 (Div. 2)</h3>
-                <p className="text-gray-400 text-xs mt-1">Duration: 2 hours</p>
-              </div>
-              
-              <div className="flex items-center sm:items-start gap-4">
-                <div className="text-center">
-                  <p className="text-gray-400 text-xs">Starts In</p>
-                  <p className="text-yellow-300 font-bold text-sm sm:text-base">2d 14h 32m</p>
-                </div>
-                
-                <button className="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-md text-xs">
-                  Set Reminder
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
+        <div className='h-6'></div>
         {/* Footer action buttons */}
         <div className="mt-6 sm:mt-8 flex items-center justify-center gap-3 sm:gap-4 flex-wrap">
           <a 
@@ -339,7 +271,7 @@ const CPDashboard = () => {
           </div>
         </div>
       </div>
-
+      
       {/* Share Popup */}
       {showSharePopup && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">

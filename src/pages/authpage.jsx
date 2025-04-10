@@ -69,7 +69,7 @@ export default function AuthPages() {
         if (response.success) {
           showNotification('Login successful! Redirecting...', 'success');
           setTimeout(() => {
-            navigate(`/username-management/${email}`);
+            navigate(`/dashboard/${email}`);
           }, 1000);
         } else {
           setError(response.message || 'Login failed. Please check your credentials.');

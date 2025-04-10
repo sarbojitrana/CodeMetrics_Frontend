@@ -16,10 +16,10 @@ import {
   Plus,
 } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchusernames } from "./utils/user";
-import { userid } from "./utils/auth";
+import { fetchusernames } from "../utils/user";
+import { userid } from "../utils/auth";
 
-const HomePage = () => {
+const Leaderboard = () => {
   const { userId } = useParams();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -639,4 +639,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default Leaderboard;

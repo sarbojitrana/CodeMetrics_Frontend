@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, Mail, Lock, Code, ArrowRight, Loader, CheckCircle, AlertCircle, X } from 'lucide-react';
 import { Outlet } from 'react-router-dom';
-import { login, register } from './utils/auth';
+import { login, register } from '../utils/auth';
 import { useNavigate } from 'react-router-dom';
 
 // CodeMetrics Logo Component
@@ -69,7 +69,7 @@ export default function AuthPages() {
         if (response.success) {
           showNotification('Login successful! Redirecting...', 'success');
           setTimeout(() => {
-            navigate(`/addusers/${email}`);
+            navigate(`/dashboard/${email}`);
           }, 1000);
         } else {
           setError(response.message || 'Login failed. Please check your credentials.');

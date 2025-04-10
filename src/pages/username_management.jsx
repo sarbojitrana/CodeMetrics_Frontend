@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User, Plus, Trash2, Loader, CheckCircle, AlertCircle, RefreshCw, ArrowLeft, Award, ExternalLink, MessageSquare, Share2 } from 'lucide-react';
-import { add, remove, fetchusernames } from './utils/user';
-import { userid } from './utils/auth';
+import { add, remove, fetchusernames } from '../utils/user';
+import { userid } from '../utils/auth';
 import { useParams, useNavigate } from 'react-router-dom';
 
 // CodeMetrics Logo Component
@@ -150,7 +150,7 @@ const UsernameManagementPage = () => {
   };
   
   const handleNavigateToManagement = () => {
-    navigate(`/Homepage/${userId}`);
+    navigate(`/leaderboard/${userId}`);
   };
 
   // Share functionality

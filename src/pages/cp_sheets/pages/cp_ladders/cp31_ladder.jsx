@@ -2,23 +2,27 @@ import React, { useState, useEffect } from "react";
 import { CheckCircle, Award, ArrowLeft, Code, BarChart, Star, Users, ExternalLink, Trophy, Clock } from "lucide-react";
 import { useLocation, Link } from 'react-router-dom';
 
-const Division_Ladder = () => {
+const CP31_ladder = () => {
   const [solvedProblems, setSolvedProblems] = useState(new Set());
   const [loading, setLoading] = useState(false);
   const [problemsView, setProblemsView] = useState([]);
   const [showConfetti, setShowConfetti] = useState(false);
   const [activeFilter, setActiveFilter] = useState('all');
   const location = useLocation();
-  const { receivedData, handle } = location.state || {};
 
+  const receivedData = location.state?.data || [];
+  
   useEffect(() => {
-    if (Array.isArray(receivedData)) {
-      setProblemsView(receivedData);
-    }
+    setProblemsView(receivedData);
   }, [receivedData]);
 
+  const handle = location.state?.username || 'sarafarajnasardi';
+  const selectedRating = location.state?.rating || 'Codeforces Rating: 800';
+  
   useEffect(() => {
-    if (handle) loadSolvedProblems(handle);
+    if (handle) {
+      loadSolvedProblems(handle);
+    }
   }, [handle]);
 
   // Show confetti when the user has solved more than 75% of problems
@@ -43,7 +47,9 @@ const Division_Ladder = () => {
         const solvedSet = new Set();
         data.result.forEach((submission) => {
           if (submission.verdict === "OK") {
-            solvedSet.add(`${submission.problem.contestId}${submission.problem.index}`);
+            solvedSet.add(
+             `${submission.problem.contestId}${submission.problem.index}`
+            );
           }
         });
         setSolvedProblems(solvedSet);
@@ -58,6 +64,7 @@ const Division_Ladder = () => {
   };
 
   const getRatingColor = (rating) => {
+    if (!rating) return "text-gray-400 bg-gray-800/50 border-gray-700";
     if (rating < 1200) return "text-gray-300 bg-gray-800/50 border-gray-700";
     if (rating < 1400) return "text-green-400 bg-green-900/30 border-green-700/50";
     if (rating < 1600) return "text-cyan-400 bg-cyan-900/30 border-cyan-700/50";
@@ -70,12 +77,12 @@ const Division_Ladder = () => {
   const getFilteredProblems = () => {
     if (activeFilter === 'solved') {
       return problemsView.filter(problem => {
-        const id = `${problem[2]}${problem[3]}`;
+        const id = `${problem.contestId}${problem.index}`;
         return solvedProblems.has(id);
       });
     } else if (activeFilter === 'unsolved') {
       return problemsView.filter(problem => {
-        const id = `${problem[2]}${problem[3]}`;
+        const id = `${problem.contestId}${problem.index}`;
         return !solvedProblems.has(id);
       });
     }
@@ -83,19 +90,21 @@ const Division_Ladder = () => {
   };
 
   const totalProblems = problemsView.length;
-  const solvedCount = problemsView.filter(problem =>
-    solvedProblems.has(`${problem[2]}${problem[3]}`)
-  ).length;
+  const solvedCount = problemsView.filter(problem => {
+    const id = `${problem.contestId}${problem.index}`;
+    return solvedProblems.has(id);
+  }).length;
+
   const progressPercentage = totalProblems > 0 ? (solvedCount / totalProblems) * 100 : 0;
   const filteredProblems = getFilteredProblems();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-950 to-blue-900 py-8 px-4 overflow-hidden relative">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-950 to-indigo-900 py-8 px-4 overflow-hidden relative">
       {/* Decorative elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-10 left-10 w-96 h-96 bg-blue-500 opacity-10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-40 right-20 w-64 h-64 bg-indigo-600 opacity-10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/3 right-1/4 w-32 h-32 bg-purple-400 opacity-10 rounded-full blur-xl animate-pulse"></div>
+        <div className="absolute top-1/3 right-1/4 w-32 h-32 bg-cyan-400 opacity-10 rounded-full blur-xl animate-pulse"></div>
       </div>
 
       {/* Confetti overlay - shown when achievement unlocked */}
@@ -139,9 +148,9 @@ const Division_Ladder = () => {
 
       <div className="mx-auto max-w-5xl relative">
         {/* Header */}
-        <div className="backdrop-blur-xl bg-black/40 rounded-2xl shadow-2xl p-8 mb-8 border border-gray-700/50 transform transition-all hover:border-indigo-500/30 duration-500">
-          <Link to="/" className="inline-flex items-center text-gray-400 hover:text-indigo-400 mb-6 transition-all duration-300 group">
-            <div className="p-2 rounded-full bg-gray-800/80 border border-gray-700/50 mr-2 group-hover:border-indigo-500/50 transition-all duration-300">
+        <div className="backdrop-blur-x bg-black/40  rounded-2xl shadow-2xl p-8 mb-8 border border-gray-700/50 transform transition-all hover:border-blue-500/30 duration-500">
+          <Link to="/cp-sheets" className="inline-flex items-center text-gray-400 hover:text-blue-400 mb-6 transition-all duration-300 group">
+            <div className="p-2 rounded-full bg-gray-800/80 border border-gray-700/50 mr-2 group-hover:border-blue-500/50 transition-all duration-300">
               <ArrowLeft className="h-4 w-4 group-hover:scale-110 transition-transform" />
             </div>
             <span>Back to Ladder Selection</span>
@@ -149,26 +158,26 @@ const Division_Ladder = () => {
 
           <div className="text-center mb-8">
             <div className="flex justify-center mb-4">
-              <div className="p-4 rounded-full bg-gradient-to-br from-indigo-500/20 to-blue-600/20 border border-indigo-500/30 shadow-lg shadow-indigo-900/20">
-                <Code className="h-10 w-10 text-indigo-400" />
+              <div className="p-4 rounded-full bg-gradient-to-br from-blue-500/20 to-indigo-600/20 border border-blue-500/30 shadow-lg shadow-blue-900/20">
+                <Code className="h-10 w-10 text-blue-400" />
               </div>
             </div>
-            <h1 className="text-5xl font-bold mb-4 tracking-tight bg-gradient-to-r from-indigo-400 via-purple-300 to-blue-400 text-transparent bg-clip-text">
-              A2OJ Ladder
+            <h1 className="text-5xl font-bold mb-4 tracking-tight bg-gradient-to-r from-blue-400 via-cyan-300 to-indigo-400 text-transparent bg-clip-text">
+              {selectedRating}
             </h1>
-            <div className="w-20 h-1 bg-gradient-to-r from-indigo-500 to-blue-500 mx-auto mb-6"></div>
+            <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 mx-auto mb-6"></div>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto font-light">
               Master competitive programming one problem at a time
             </p>
           </div>
 
           {/* User info and progress */}
-          <div className="bg-gray-800/60 rounded-xl p-6 border border-gray-700/50 shadow-xl backdrop-blur-lg hover:border-indigo-500/30 transition-all duration-500">
+          <div className="bg-gray-800/60 rounded-xl p-6 border border-gray-700/50 shadow-xl backdrop-blur-lg hover:border-blue-500/30 transition-all duration-500">
             <div className="flex flex-col md:flex-row items-center justify-between mb-6">
               <div className="flex items-center mb-4 md:mb-0">
                 <div className="relative">
-                  <div className="p-3 rounded-full bg-gradient-to-br from-indigo-600/30 to-blue-700/30 border border-indigo-500/30 mr-4 shadow-lg shadow-indigo-900/20">
-                    <Users className="h-6 w-6 text-indigo-400" />
+                  <div className="p-3 rounded-full bg-gradient-to-br from-blue-600/30 to-indigo-700/30 border border-blue-500/30 mr-4 shadow-lg shadow-blue-900/20">
+                    <Users className="h-6 w-6 text-blue-400" />
                   </div>
                   {solvedCount > 0 && (
                     <div className="absolute -top-1 -right-1 p-1 rounded-full bg-green-500 border-2 border-gray-800"></div>
@@ -176,7 +185,7 @@ const Division_Ladder = () => {
                 </div>
                 <div>
                   <h2 className="text-xl font-medium text-white flex items-center">
-                    {handle || "Guest User"}
+                    {handle}
                     {progressPercentage > 50 && (
                       <Star className="h-4 w-4 text-yellow-400 ml-2" />
                     )}
@@ -189,7 +198,7 @@ const Division_Ladder = () => {
               </div>
 
               <div className="bg-gray-900/70 px-5 py-3 rounded-lg border border-gray-700/60 shadow-lg flex items-center gap-3 transform hover:translate-y-[-2px] transition-all">
-                <BarChart className="h-5 w-5 text-indigo-400" />
+                <BarChart className="h-5 w-5 text-blue-400" />
                 <div>
                   <div className="font-medium text-white text-lg">{Math.round(progressPercentage)}% Complete</div>
                   <div className="text-xs text-gray-400">{totalProblems - solvedCount} problems remaining</div>
@@ -201,7 +210,7 @@ const Division_Ladder = () => {
             <div className="relative">
               <div className="w-full bg-gray-900/80 rounded-full h-5 mb-4 overflow-hidden border border-gray-800/80">
                 <div
-                  className="bg-gradient-to-r from-indigo-600 via-purple-500 to-blue-400 h-5 rounded-full transition-all duration-700 ease-out relative"
+                  className="bg-gradient-to-r from-blue-600 via-indigo-500 to-blue-400 h-5 rounded-full transition-all duration-700 ease-out relative"
                   style={{ width: `${Math.max(progressPercentage, 3)}%` }}
                 >
                   {progressPercentage > 15 && (
@@ -218,7 +227,7 @@ const Division_Ladder = () => {
                   Beginner
                 </span>
                 <span className="flex items-center">
-                  <div className="w-2 h-2 bg-indigo-500 rounded-full mr-1"></div>
+                  <div className="w-2 h-2 bg-blue-500 rounded-full mr-1"></div>
                   Intermediate
                 </span>
                 <span className="flex items-center">
@@ -231,17 +240,17 @@ const Division_Ladder = () => {
         </div>
 
         {/* Problems list */}
-        <div className="backdrop-blur-xl bg-black/40 rounded-2xl shadow-2xl p-8 border border-gray-700/50 transform transition-all hover:border-indigo-500/30 duration-500">
+        <div className="backdrop-blur-xl bg-black/40 rounded-2xl shadow-2xl p-8 border border-gray-700/50 transform transition-all hover:border-blue-500/30 duration-500">
           <div className="flex flex-col md:flex-row items-center justify-between mb-8">
             <h2 className="text-2xl font-bold flex items-center text-white mb-4 md:mb-0">
-              <Code className="h-6 w-6 mr-2 text-indigo-400" />
+              <Code className="h-6 w-6 mr-2 text-blue-400" />
               Problems Collection
             </h2>
             
             {/* Filter buttons */}
             <div className="flex space-x-2 bg-gray-900/60 p-1 rounded-lg border border-gray-700/50">
               <button 
-                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeFilter === 'all' ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:text-white'}`}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeFilter === 'all' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-white'}`}
                 onClick={() => setActiveFilter('all')}
               >
                 All Problems
@@ -253,7 +262,7 @@ const Division_Ladder = () => {
                 Solved
               </button>
               <button 
-                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeFilter === 'unsolved' ? 'bg-purple-600 text-white' : 'text-gray-400 hover:text-white'}`}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeFilter === 'unsolved' ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:text-white'}`}
                 onClick={() => setActiveFilter('unsolved')}
               >
                 Unsolved
@@ -263,8 +272,8 @@ const Division_Ladder = () => {
 
           {loading ? (
             <div className="text-center py-12">
-              <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-indigo-400 border-r-transparent relative">
-                <div className="absolute inset-0 rounded-full border-4 border-indigo-400/20"></div>
+              <div className="inline-block h-12 w-12 animate-spin rounded-full border-4 border-solid border-blue-400 border-r-transparent relative">
+                <div className="absolute inset-0 rounded-full border-4 border-blue-400/20"></div>
               </div>
               <p className="mt-4 text-gray-300 font-medium">Loading your progress...</p>
             </div>
@@ -279,7 +288,11 @@ const Division_Ladder = () => {
               ) : (
                 <div className="space-y-3">
                   {filteredProblems.map((problem, index) => {
-                    const problemId = `${problem[2]}${problem[3]}`;
+                    const contestId = problem.contestId;
+                    const problemIndex = problem.index;
+                    const title = problem.title;
+                    const rating = problem.rating;
+                    const problemId = `${contestId}${problemIndex}`;
                     const isSolved = solvedProblems.has(problemId);
 
                     return (
@@ -289,15 +302,13 @@ const Division_Ladder = () => {
                           isSolved 
                             ? "bg-gradient-to-r from-green-900/40 to-green-800/20 border-green-700/50" 
                             : "bg-gradient-to-r from-gray-800/60 to-gray-900/60 border-gray-700/50"
-                        } hover:shadow-lg transition-all duration-300 group backdrop-blur-md transform hover:scale-[1.01] hover:border-indigo-500/30`}
+                        } hover:shadow-lg transition-all duration-300 group backdrop-blur-md transform hover:scale-[1.01] hover:border-blue-500/30`}
                       >
                         <div className="flex items-center mb-3 sm:mb-0">
                           <div
-                            className={`text-sm font-medium px-3 py-1 rounded-full border ${getRatingColor(
-                              problem[0]
-                            )}`}
+                            className={`text-sm font-medium px-3 py-1 rounded-full border ${getRatingColor(rating)}`}
                           >
-                            {problem[0]}
+                            {rating || "N/A"}
                           </div>
                           
                           {isSolved && (
@@ -309,23 +320,23 @@ const Division_Ladder = () => {
                         </div>
                         
                         <a
-                          href={`https://codeforces.com/problemset/problem/${problem[2]}/${problem[3]}`}
+                          href={`https://codeforces.com/problemset/problem/${contestId}/${problemIndex}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex-grow sm:ml-4 font-medium text-gray-200 group-hover:text-indigo-400 transition-colors flex items-center"
+                          className="flex-grow sm:ml-4 font-medium text-gray-200 group-hover:text-blue-400 transition-colors flex items-center"
                         >
-                          <span className="mr-2">{problem[1]}</span>
+                          <span className="mr-2">{title}</span>
                           <span className="text-gray-500 text-sm">
-                            ({problem[2]}{problem[3]})
+                            ({contestId}{problemIndex})
                           </span>
                         </a>
                         
                         <div className="flex items-center gap-3 mt-3 sm:mt-0 sm:ml-4">
                           <a
-                            href={`https://codeforces.com/problemset/problem/${problem[2]}/${problem[3]}`}
+                            href={`https://codeforces.com/problemset/problem/${contestId}/${problemIndex}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-3 py-1.5 bg-indigo-900/40 text-indigo-400 rounded-lg text-sm border border-indigo-700/50 flex items-center hover:bg-indigo-800/40 transition-colors"
+                            className="px-3 py-1.5 bg-blue-900/40 text-blue-400 rounded-lg text-sm border border-blue-700/50 flex items-center hover:bg-blue-800/40 transition-colors"
                           >
                             <ExternalLink className="h-4 w-4 mr-1" />
                             <span className="font-medium">Solve</span>
@@ -333,7 +344,7 @@ const Division_Ladder = () => {
                           
                           <div className="flex items-center space-x-1 text-gray-400 text-sm">
                             <Clock className="h-3.5 w-3.5" />
-                            <span>{(problem[0]/100).toFixed(1)}x</span>
+                            <span>{(rating/100).toFixed(1)}x</span>
                           </div>
                         </div>
                       </div>
@@ -347,10 +358,10 @@ const Division_Ladder = () => {
         
         {/* Bottom stat cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
-          <div className="backdrop-blur-lg bg-black/40 rounded-xl p-4 border border-gray-700/50 hover:border-indigo-500/30 transition-all duration-300 shadow-lg">
+          <div className="backdrop-blur-lg bg-black/40 rounded-xl p-4 border border-gray-700/50 hover:border-blue-500/30 transition-all duration-300 shadow-lg">
             <div className="flex items-center">
-              <div className="p-2 rounded-lg bg-indigo-900/40 border border-indigo-700/50 mr-3">
-                <Trophy className="h-5 w-5 text-indigo-400" />
+              <div className="p-2 rounded-lg bg-blue-900/40 border border-blue-700/50 mr-3">
+                <Trophy className="h-5 w-5 text-blue-400" />
               </div>
               <div>
                 <h3 className="text-lg font-medium text-white">{solvedCount} Solved</h3>
@@ -359,10 +370,10 @@ const Division_Ladder = () => {
             </div>
           </div>
           
-          <div className="backdrop-blur-lg bg-black/40 rounded-xl p-4 border border-gray-700/50 hover:border-indigo-500/30 transition-all duration-300 shadow-lg">
+          <div className="backdrop-blur-lg bg-black/40 rounded-xl p-4 border border-gray-700/50 hover:border-blue-500/30 transition-all duration-300 shadow-lg">
             <div className="flex items-center">
-              <div className="p-2 rounded-lg bg-purple-900/40 border border-purple-700/50 mr-3">
-                <BarChart className="h-5 w-5 text-purple-400" />
+              <div className="p-2 rounded-lg bg-indigo-900/40 border border-indigo-700/50 mr-3">
+                <BarChart className="h-5 w-5 text-indigo-400" />
               </div>
               <div>
                 <h3 className="text-lg font-medium text-white">{Math.round(progressPercentage)}% Complete</h3>
@@ -371,10 +382,10 @@ const Division_Ladder = () => {
             </div>
           </div>
           
-          <div className="backdrop-blur-lg bg-black/40 rounded-xl p-4 border border-gray-700/50 hover:border-indigo-500/30 transition-all duration-300 shadow-lg">
+          <div className="backdrop-blur-lg bg-black/40 rounded-xl p-4 border border-gray-700/50 hover:border-blue-500/30 transition-all duration-300 shadow-lg">
             <div className="flex items-center">
-              <div className="p-2 rounded-lg bg-blue-900/40 border border-blue-700/50 mr-3">
-                <Code className="h-5 w-5 text-blue-400" />
+              <div className="p-2 rounded-lg bg-purple-900/40 border border-purple-700/50 mr-3">
+                <Code className="h-5 w-5 text-purple-400" />
               </div>
               <div>
                 <h3 className="text-lg font-medium text-white">{totalProblems - solvedCount} Remaining</h3>
@@ -402,4 +413,4 @@ const Division_Ladder = () => {
   );
 };
 
-export default Division_Ladder;
+export default CP31_ladder;

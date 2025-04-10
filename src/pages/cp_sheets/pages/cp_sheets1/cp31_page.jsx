@@ -11,7 +11,7 @@ import {
   rating_1400,
   rating_1500,
   rating_1600
-} from '../assets/cp31';
+} from '../../assets/cp31';
 
 const CP31 = () => {
   // Load username from localStorage on component mount

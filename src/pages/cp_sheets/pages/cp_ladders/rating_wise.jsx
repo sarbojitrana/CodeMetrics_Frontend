@@ -143,7 +143,7 @@ const Rating_Ladder = () => {
       <div className="mx-auto max-w-5xl relative">
         {/* Header */}
         <div className="backdrop-blur-xl bg-black/40 rounded-2xl shadow-2xl p-8 mb-8 border border-gray-700/50 transform transition-all hover:border-indigo-500/30 duration-500">
-          <Link to="/" className="inline-flex items-center text-gray-400 hover:text-indigo-400 mb-6 transition-all duration-300 group">
+          <Link to="/cp-sheets" className="inline-flex items-center text-gray-400 hover:text-indigo-400 mb-6 transition-all duration-300 group">
             <div className="p-2 rounded-full bg-gray-800/80 border border-gray-700/50 mr-2 group-hover:border-indigo-500/50 transition-all duration-300">
               <ArrowLeft className="h-4 w-4 group-hover:scale-110 transition-transform" />
             </div>

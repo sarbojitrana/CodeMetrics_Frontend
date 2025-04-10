@@ -10,8 +10,8 @@ import {
   Github,
   ExternalLink,
 } from "lucide-react";
-import Cp_Sheets from "./cp_sheets";
-import UpcomingContestsPage from "./upcoming_contest";
+import Cp_Sheets from "./cp_sheets1/cp_sheets";
+import UpcomingContest from "./upcoming_contest/upcoming_contest";
 
 // Logo Component with subtle animation
 const CodeMetricsLogo = () => (
@@ -159,7 +159,7 @@ const CoursePage = () => {
               }`}
               onScroll={activeTab === 1 ? handleScroll : undefined}
             >
-              {activeTab === 0 ? <Cp_Sheets /> : <UpcomingContestsPage />}
+              {activeTab === 0 ? <Cp_Sheets /> : <UpcomingContest />}
             </div>
 
             {/* Bottom gradient fade effect - only show for Upcoming Contests */}

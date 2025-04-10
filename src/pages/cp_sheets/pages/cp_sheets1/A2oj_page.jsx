@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronUp, ChevronDown, Code, Award, User, Zap, ChevronRight, Info, AlertCircle, X, Trash2 } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
-import { div_a, div_b, div_c, div_d, div_e, rating_1, rating_2, rating_3, rating_4, rating_5, rating_6, rating_7, rating_8, rating_9, rating_10, rating_11 } from '../assets/a2oj_ladders';
+import { div_a, div_b, div_c, div_d, div_e, rating_1, rating_2, rating_3, rating_4, rating_5, rating_6, rating_7, rating_8, rating_9, rating_10, rating_11 } from '../../assets/a2oj_ladders';
 
 // Custom dropdown component for reusability
 const CustomDropdown = ({ label, icon: Icon, options, value, onChange, description }) => {

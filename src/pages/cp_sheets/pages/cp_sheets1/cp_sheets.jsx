@@ -19,35 +19,17 @@ import A2oJ from "./A2oj_page";
 const Cp_Sheets = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [page, setPage] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [transitionState, setTransitionState] = useState("fadeIn");
 
-  // Load content with fade effect
+  // Load initial content
   useEffect(() => {
     setPage(<CP31 />);
-    setIsLoading(false);
   }, []);
 
   const handleTabChange = (tabIndex) => {
     if (tabIndex === activeTab) return;
-
-    // Animate transition
-    setTransitionState("fadeOut");
-
-    setTimeout(() => {
-      setIsLoading(true);
-      setActiveTab(tabIndex);
-
-      setTimeout(() => {
-        if (tabIndex === 0) {
-          setPage(<CP31 />);
-        } else {
-          setPage(<A2oJ />);
-        }
-        setIsLoading(false);
-        setTransitionState("fadeIn");
-      }, 150);
-    }, 150);
+    
+    setActiveTab(tabIndex);
+    setPage(tabIndex === 0 ? <CP31 /> : <A2oJ />);
   };
 
   // Detailed tab data with additional information
@@ -126,15 +108,11 @@ const Cp_Sheets = () => {
               key={index}
               onClick={() => handleTabChange(index)}
               className={`
-                py-3 px-5 rounded-xl transition-all duration-300
+                py-3 px-5 rounded-xl transition-all duration-200
                 flex items-center gap-3
                 ${
                   activeTab === index
-                    ? `bg-gradient-to-r ${
-                        tab.color
-                      } text-white shadow-lg shadow-${
-                        tab.color.split("-")[1]
-                      }-600/20 scale-105`
+                    ? `bg-gradient-to-r ${tab.color} text-white shadow-lg`
                     : "bg-black/40 text-gray-300 hover:bg-black/50 hover:text-white border border-gray-700/50"
                 }
               `}
@@ -161,23 +139,10 @@ const Cp_Sheets = () => {
         </div>
       </div>
 
-      {/* Content Area with Loading State */}
-      <div className=" backdrop-blur-xl rounded-xl shadow-xl border border-gray-700/50 overflow-hidden">
-        <div
-          className={`relative transition-all duration-300 ${
-            transitionState === "fadeIn" ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          {isLoading ? (
-            <div className="flex items-center justify-center py-10">
-              <div className="flex flex-col items-center">
-                <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-                <p className="text-gray-400">Loading...</p>
-              </div>
-            </div>
-          ) : (
-            <div className="p-6">{page}</div>
-          )}
+      {/* Content Area with Simple Transition */}
+      <div className="backdrop-blur-xl rounded-xl shadow-xl border border-gray-700/50 overflow-hidden">
+        <div className="transition-opacity duration-300 p-6">
+          {page}
         </div>
       </div>
     </div>

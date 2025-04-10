@@ -472,7 +472,7 @@ const Leaderboard = () => {
                 <p className="text-gray-300 mb-6 text-lg">
                   No users found. Add some users to track.
                 </p>
-                <button 
+                <button onClick={()=>navigate(-1)}
                   className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-5 py-2.5 rounded-lg text-sm flex items-center gap-2 mx-auto transition-all shadow-lg hover:shadow-xl"
                 >
                   <Plus size={18} />
